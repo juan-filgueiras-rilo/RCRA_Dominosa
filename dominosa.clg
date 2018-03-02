@@ -1,0 +1,10 @@
+#const n=4.
+col(1..n).
+tile(1..n,1..n,1..n).
+domino(tile,tile).
+%una fila/columna por reina
+1{domino(tile(X1,Y1,val1),tile(X2,Y2,val2)):tile(X1,Y1,val1)}1:-tile(X2,Y2,val2).
+1{domino(tile(X1,Y1,val1),tile(X2,Y2,val2)):tile(X2,Y2,val2)}1:-tile(X1,Y1,val1).
+:-domino(T1,T2),domino(T3,T4),T1!=T2,T2!=T3,T3!=T4,T4=T1.
+:-domino(tile(X1,Y2,val1),tile(X2,Y2,val2)),X1=X2+1,X1=X2-1,Y1=Y2-1,Y1=Y2+1.
+:-domino(tile(X1,Y2,val1),tile(X2,Y2,val2)),X2=X1+1,X2=X1-1,Y2=Y1-1,Y2=Y1+1.
