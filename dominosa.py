@@ -60,16 +60,16 @@ class ficha:
 			x4=fich.x
 			y4=fich.y+1
 		if (self.x==fich.x and self.y==fich.y):
-			print('Afichas:',self.idfich,' ',fich.idfich)
+			#print('Afichas:',self.idfich,' ',fich.idfich)
 			return True
 		if (self.x==x4 and self.y==y4):
-			print('Bfichas:',self.idfich,' ',fich.idfich)
+			#print('Bfichas:',self.idfich,' ',fich.idfich)
 			return True
 		if (x2==x4 and y2==y4):
-			print('Cfichas:',self.idfich,' ',fich.idfich)
+			#print('Cfichas:',self.idfich,' ',fich.idfich)
 			return True
 		if (x2==fich.x and y2==fich.y):
-			print('Dfichas:',self.idfich,' ',fich.idfich)
+			#print('Dfichas:',self.idfich,' ',fich.idfich)
 			return True
 
 		return False
@@ -187,7 +187,12 @@ class tabla:
 			print(self.lista[i],end='') 
 		print('')
 	def createReglas(self):
+		print('creando reglas')
+		contporcentaje=0
+		print('')
 		for fi1 in self.lfichas:
+			print(int(contporcentaje/len(self.lfichas)*100),'% \r',end='')
+			contporcentaje+=1
 			r1=regla(fi1)
 			for fi2 in self.lfichas:
 				if not fi1.equals(fi2):
@@ -203,26 +208,31 @@ class tabla:
 		global contreglas
 		#primera linea
 		#declracion de variables (aka fichas)
+		print('escribiendo hash')
 		sf='c'
 		for fich in self.lfichas:
 			sf=sf+' '+'['+str(fich.idfich)+']-'+fich.hash() 
 		salida.storetail (sf+' 0\n')
-
+		print('escribiendo id')
 		sfid=''
 		for fich in self.lfichas:
 			sfid=sfid+' '+str(fich.idfich) 
 		salida.storetail(sfid+' 0\n')
 		contreglas+=1
 		sr=''
+		contporcentaje=0
+		print('calculando reglas')
 		for rgl in self.lreglas:
 			sr=sr+'\n'+rgl.toString()+''
+			print(int(contporcentaje/len(self.lreglas))*100,'%\r', end='')
+			contporcentaje+=1
 		salida.storetail (sr)
 		#declaracion de reglas
 		sh=('p cnf '+str(len(self.lfichas))+' '+str(contreglas)+'\n')
 		salida.storehead(sh)
 def main():
 	#Leer fichero
-	t=tabla('dom07.txt')
+	t=tabla('dom30.txt')
 	s=salida('salida.txt')
 	#t.show()
 	t.generatefichas()
