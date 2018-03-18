@@ -250,6 +250,7 @@ class tabla:
 						#print ('>',lineaspl[i])
 						self.sol.append(self.findFichaId(int(lineaspl[i])))#buscar id en la lista y append a soluciones		
 	def showSol(self):
+		solx=salida('solx.txt')
 		print('SOLUCION :')
 		#inicializar 
 		listatabla=[]
@@ -265,10 +266,11 @@ class tabla:
 				listatabla[(self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x))+self.maxx+1]='^'
 		print('',end='\n')
 		for i in range(0,len(listatabla)):
-			if (i % (self.maxx+1)==0):
-				print('')
-			print(listatabla[i],end='')
-		print('')
+			if (i % (self.maxx+1)==0) and i!=0:
+				solx.storetail('\n')
+			solx.storetail(listatabla[i])
+		solx.storetail('\n')
+		solx.privado()
 def main():
 	#Leer fichero
 	t=tabla(sys.argv[1])
