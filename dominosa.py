@@ -1,4 +1,5 @@
 import math
+import sys
 #clase salida
 contreglas=0
 class salida():
@@ -232,7 +233,7 @@ class tabla:
 		salida.storehead(sh)
 def main():
 	#Leer fichero
-	t=tabla('dom30.txt')
+	t=tabla(sys.argv[1])
 	s=salida('salida.txt')
 	#t.show()
 	t.generatefichas()
@@ -246,7 +247,7 @@ def main():
 		#hash de la ficha (val1 val2 x y (h|v))
 		#negar fichas superpuestas (que compatan (x,y) o al rededores)
 	#exportar hash y reglas a formato clasp
-
+	#os.system('')
 if __name__ == "__main__":
     # execute only if run as a script
     main()
