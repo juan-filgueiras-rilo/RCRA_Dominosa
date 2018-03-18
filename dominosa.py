@@ -1,3 +1,4 @@
+import os
 import math
 import sys
 #clase salida
@@ -147,6 +148,7 @@ class regla():
 #clase tabla
 class tabla:
 	def __init__(self,fichero):
+		self.sol=[]
 		self.lista=[]
 		self.lfichas=[]
 		self.lreglas=[]
@@ -231,6 +233,42 @@ class tabla:
 		#declaracion de reglas
 		sh=('p cnf '+str(len(self.lfichas))+' '+str(contreglas)+'\n')
 		salida.storehead(sh)
+	def findFichaId(self,id):
+		for ficha in self.lfichas:
+			if ficha.idfich==id:
+				return ficha
+
+	def readSol(self):
+		f=open('resultado.txt','r')
+		linea=' '
+		while linea!='':
+			linea=f.readline()
+			lineaspl=linea.split(' ')
+			if lineaspl[0]=='v':
+				for i in range(1,len(lineaspl)):
+					if (not (lineaspl[i].startswith('-'))) and (not (int(lineaspl[i])==0)):
+						#print ('>',lineaspl[i])
+						self.sol.append(self.findFichaId(int(lineaspl[i])))#buscar id en la lista y append a soluciones		
+	def showSol(self):
+		print('SOLUCION :')
+		#inicializar 
+		listatabla=[]
+		for i in range(0,(self.maxx+1)*(self.maxy+1)):
+			listatabla.append('0')
+		for ficha in self.sol:
+			print('>',ficha.idfich,len(self.sol))
+			if(ficha.direc=='HORIZONTAL'):
+				listatabla[self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x)]='>'
+				listatabla[(self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x))+1]='<'
+			if(ficha.direc=='VERTICAL'):
+				listatabla[self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x)]='v'
+				listatabla[(self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x))+self.maxx+1]='^'
+		print('',end='\n')
+		for i in range(0,len(listatabla)):
+			if (i % (self.maxx+1)==0):
+				print('')
+			print(listatabla[i],end='')
+		print('')
 def main():
 	#Leer fichero
 	t=tabla(sys.argv[1])
@@ -247,7 +285,9 @@ def main():
 		#hash de la ficha (val1 val2 x y (h|v))
 		#negar fichas superpuestas (que compatan (x,y) o al rededores)
 	#exportar hash y reglas a formato clasp
-	#os.system('')
+	os.system('clasp salida.txt > resultado.txt')
+	t.readSol()
+	t.showSol()
 if __name__ == "__main__":
     # execute only if run as a script
     main()
