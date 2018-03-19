@@ -1,0 +1,129 @@
+tile(1,1,1).
+tile(1,2,4).
+tile(1,3,2).
+tile(1,4,4).
+tile(1,5,2).
+tile(1,6,1).
+tile(2,1,4).
+tile(2,2,3).
+tile(2,3,2).
+tile(2,4,0).
+tile(2,5,0).
+tile(2,6,0).
+tile(3,1,4).
+tile(3,2,1).
+tile(3,3,2).
+tile(3,4,3).
+tile(3,5,3).
+tile(3,6,3).
+tile(4,1,2).
+tile(4,2,1).
+tile(4,3,4).
+tile(4,4,0).
+tile(4,5,3).
+tile(4,6,4).
+tile(5,1,0).
+tile(5,2,1).
+tile(5,3,2).
+tile(5,4,0).
+tile(5,5,1).
+tile(5,6,3).
+
+tile(1,1,3).
+tile(1,2,3).
+tile(1,3,1).
+tile(1,4,1).
+tile(1,5,2).
+tile(2,1,2).
+tile(2,2,3).
+tile(2,3,1).
+tile(2,4,1).
+tile(2,5,0).
+tile(3,1,3).
+tile(3,2,2).
+tile(3,3,2).
+tile(3,4,0).
+tile(3,5,0).
+tile(4,1,2).
+tile(4,2,1).
+tile(4,3,3).
+tile(4,4,0).
+tile(4,5,0).
+
+tile(1,1,0).
+tile(1,2,1).
+tile(1,3,1).
+tile(1,4,2).
+tile(2,1,0).
+tile(2,2,0).
+tile(2,3,2).
+tile(2,4,2).
+tile(3,1,0).
+tile(3,2,1).
+tile(3,3,1).
+tile(3,4,2).
+
+tile(1,1,0).
+tile(1,2,0).
+tile(1,3,1).
+tile(2,1,1).
+tile(2,2,1).
+tile(2,3,0).
+
+%Regla de generación para hacer pruebas.
+%1 {tile(R,C,V) : value(V)} 1 :- row(R), column(C).
+
+%domino(R1,C1,R2,C2) :- row(R1), row(R2), column(C1), column(C2).
+%domino(R1,C1,V1,R2,C2,V2) :- row(R1), row(R2), column(C1), column(C2), value(V1), value(V2).
+
+%Regla de generación de fichas.
+(n*(n+1))/2 { domino(R1,C1,R2,C2,V1,V2) : tile(R1,C1,V1), tile(R2,C2,V2) } (n*(n+1))/2.
+
+%Effect axioms
+%Fichas formadas por dos casillas iguales/no adyacentes.
+:- domino(R1,C1,R2,C2), R1=R2, C1=C2.
+:- domino(R1,C1,R2,C2), |R2-R1|>1, C1=C2.
+:- domino(R1,C1,R2,C2), R1=R2, |C1-C2|>1.
+:- domino(R1,C1,R2,C2), R1!=R2, C1!=C2.
+
+	%Fichas formadas por posiciones no-adyacentes
+%:- domino(R1,C1,R2,C2), 
+	%Fichas iguales con valores iguales en sitios iguales
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), R1!=R2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), C1!=C2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), R1!=R2, C1!=C2.
+
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), R1!=R2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), C1!=C2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), R1!=R2, C1!=C2.
+
+%No usar la misma tile en la misma posicion para dos fichas distintas
+%:- domino(R,C,R1,C1), domino(R,C,R2,C2), R1!=R2, C1!=C2.
+:- domino(R,C,R1,C1), domino(R,C,R2,C2), R1!=R2.
+:- domino(R,C,R1,C1), domino(R,C,R2,C2), C1!=C2.
+
+%:- domino(R1,C1,R,C), domino(R2,C2,R,C), R1!=R2, C1!=C2.
+:- domino(R1,C1,R,C), domino(R2,C2,R,C), C1!=C2.
+:- domino(R1,C1,R,C), domino(R2,C2,R,C), R1!=R2.
+
+%No usar la misma tile en la posicion contraria para dos fichas distintas
+:- domino(R,C,_,_), domino(_,_,R,C).
+%:- domino(_,_,R,C), domino(R,C,_,_).
+
+%Los valores de una ficha cualquiera y otra no deben coincidir
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), R1!=R2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), C1!=C2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V1,V2), R1!=R2, C1!=C2.
+
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), R1!=R2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), C1!=C2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V1,V2), R1!=R2, C1!=C2.
+
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V2,V1), R1!=R2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V2,V1), C1!=C2.
+%:- domino(R1,C1,_,_,V1,V2), domino(R2,C2,_,_,V2,V1), R1!=R2, C1!=C2.
+
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V2,V1), R1!=R2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V2,V1), C1!=C2.
+%:- domino(_,_,R1,C1,V1,V2), domino(_,_,R2,C2,V2,V1), R1!=R2, C1!=C2.
+

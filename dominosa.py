@@ -285,7 +285,7 @@ def main():
 		#lista de fichas
 		#buscar fichas con cada valor y anadirlas
 		#hash de la ficha (val1 val2 x y (h|v))
-		#negar fichas superpuestas (que compatan (x,y) o al rededores)
+		#negar fichas superpuestas (que compatan (x,y) o alrededores)
 	#exportar hash y reglas a formato clasp
 	os.system('clasp salida.txt > resultado.txt')
 	t.readSol()
