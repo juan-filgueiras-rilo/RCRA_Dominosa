@@ -67,7 +67,7 @@ def main():
 	t.toClingo(s)
 	s.storehead('% Type declarations\n\
 #show domino/5.\n\
-#const n=5.\n\
+#const n='+str(t.maxx)+'.\n\
 \
 column(1..n+1).\n\
 row(1..n).\n\
