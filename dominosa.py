@@ -15,6 +15,8 @@ class salida():
 		self.strstored=cosas+self.strstored
 	def privado(self):
 		self.fsalida.write(self.strstored)
+	def close(self):
+		self.fsalida.close()
 
 #clase ficha
 class ficha:
@@ -164,6 +166,7 @@ class tabla:
 			#print('fila',i,'linea',linea)
 			for j in range(0,self.maxx+1):
 				self.lista.append(int(linea[j]))
+		f.close()
 	def generatefichas(self):
 		#genera toda las fichas
 		idf=1
@@ -189,15 +192,20 @@ class tabla:
 				print('\n')
 			print(self.lista[i],end='') 
 		print('')
+	
 	def createReglas(self):
 		print('creando reglas')
 		contporcentaje=0
 		print('')
 		for fi1 in self.lfichas:
+			print('')
 			print(int(contporcentaje/len(self.lfichas)*100),'% \r',end='')
 			contporcentaje+=1
 			r1=regla(fi1)
+			port2=0
 			for fi2 in self.lfichas:
+				print('\t',int(port2/len(self.lfichas)*100),'% \r',end='')
+				port2+=1
 				if not fi1.equals(fi2):
 					if fi1.incompatibles(fi2):
 						r1.addCancel(fi2)
@@ -249,6 +257,7 @@ class tabla:
 					if (not (lineaspl[i].startswith('-'))) and (not (int(lineaspl[i])==0)):
 						#print ('>',lineaspl[i])
 						self.sol.append(self.findFichaId(int(lineaspl[i])))#buscar id en la lista y append a soluciones		
+		f.close()
 	def showSol(self):
 		solx=salida('solx.txt')
 		print('SOLUCION :')
@@ -271,6 +280,7 @@ class tabla:
 			solx.storetail(listatabla[i])
 		solx.storetail('\n')
 		solx.privado()
+		solx.close()
 def main():
 	#Leer fichero
 	t=tabla(sys.argv[1])
@@ -282,12 +292,11 @@ def main():
 	#t.showReglas()
 	t.toClasp(s)
 	s.privado()
-		#lista de fichas
-		#buscar fichas con cada valor y anadirlas
-		#hash de la ficha (val1 val2 x y (h|v))
-		#negar fichas superpuestas (que compatan (x,y) o alrededores)
-	#exportar hash y reglas a formato clasp
+	s.close()
+	#sys.stdin.flush()
 	os.system('clasp salida.txt > resultado.txt')
+	#os.system('echo HOLA')
+	
 	t.readSol()
 	t.showSol()
 if __name__ == "__main__":
