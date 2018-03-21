@@ -1,0 +1,21 @@
+% Type declarations
+#show domino/3.
+
+orient(O,R,C) :- tile(R,C,_), O=h, tile(R,C+1,_).
+orient(O,R,C) :- tile(R,C,_), O=v, tile(R+1,C,_).
+
+ { domino(R,C,O) : orient(O,R,C) } 1 :- tile(R,C,_).
+
+domino(R,C,V1,V2) :- domino(R,C,O), tile(R,C,V1), O=h, tile(R,C+1,V2).
+domino(R,C,V1,V2) :- domino(R,C,O), tile(R,C,V1), O=v, tile(R+1,C,V2).
+domino(V1,V2) :- domino(_,_,V1,V2).
+
+:- domino(V1,V2), domino(V2,V1), V2!=V1.
+
+:- domino(R1,C1,V1,V2), domino(R2,C2,V1,V2), R1!=R2.
+:- domino(R1,C1,V1,V2), domino(R2,C2,V1,V2), C1!=C2.
+
+used(R,C) :- domino(R,C,O).
+used(R,C) :- domino(R,C1,O), O=h, tile(R,C,_), C=C1+1.
+used(R,C) :- domino(R1,C,O), O=v, tile(R,C,_), R=R1+1.
+:- tile(R,C,_), not used(R,C).
