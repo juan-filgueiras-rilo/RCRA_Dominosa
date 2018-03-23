@@ -15,7 +15,8 @@ class salida():
 		self.strstored=cosas+self.strstored
 	def privado(self):
 		self.fsalida.write(self.strstored)
-
+	def close(self):
+		self.fsalida.close()
 #clase ficha
 class ficha:
 	def __init__(self,idf,x,y,val,direc):
@@ -40,10 +41,7 @@ class ficha:
 			return True
 		return False
 	def incompatibles(self,fich):
-		if self.val[0]==fich.val[0] and self.val[1]==fich.val[1]:
-			return True
-		if self.val[1]==fich.val[0] and self.val[0]==fich.val[1]:
-			return True
+		
 		##################
 		x2=0
 		y2=0
@@ -125,37 +123,60 @@ class listaFichas():
 			self.lvalores=[]
 			self.lposiciones=[]
 			self.lreglas=[]
-			for i in range((self.maxx+1)*(self.maxy+1)):
+			for i in range(0,self.maxx+1):
 				self.lvalores.append([])
-				self.lposiciones.append([])
-				self.lposiciones[i]=[]
+				#print(i)
+				for j in range(0,self.maxy+1):
+					self.lvalores[i].append([])
+
+					self.lposiciones.append([])
 		def appendFicha(self,fich):
-			self.lvalores[fich.val[0]].append(fich)
-			self.lvalores[fich.val[1]].append(fich)
+			if(fich.val[0]<=fich.val[1]):
+				min=fich.val[0]
+				max=fich.val[1]
+			else:
+				min=fich.val[1]
+				max=fich.val[0]
+			self.lvalores[min][max].append(fich)
+			#self.lvalores[fich.val[1]].append(fich)
 			self.lposiciones[self.maxx+((self.maxx+1)*fich.y)-(self.maxx-fich.x)].append(fich)
 		def reglas(self):
 			porcent=0
-			for pos in self.lvalores:
-				print(float(porcent/len(self.lvalores)*100),' ',porcent,'/',len(pos),'% \r',end='')
+			for pos in self.lposiciones:
+				print(float(porcent/len(self.lposiciones)*100),' ',porcent,'/',len(pos),'% \r',end='')
 				porcent+=1
 				for ficha1 in pos:
 					r1=regla(ficha1)
-					for ficha2 in self.lvalores[ficha1.val[0]]:
-						if(ficha1.valEquals(ficha2) and not ficha1.equals(ficha2)):
+					if(ficha1.val[0]<=ficha1.val[1]):
+						min=ficha1.val[0]
+						max=ficha1.val[1]
+					else:
+						min=ficha1.val[1]
+						max=ficha1.val[0]
+					for ficha2 in self.lvalores[min][max]:	
+						if not (ficha1.equals(ficha2)):
 							r1.lcancel.append(ficha2)
-					for ficha2 in self.lvalores[ficha1.val[1]]:
-						if(ficha1.valEquals(ficha2) and not ficha1.equals(ficha2)):
-							r1.lcancel.append(ficha2)
-					for i in range(ficha1.x-1,ficha1.x+1):
-						for j in range(ficha1.y-1,ficha1.y+1):
+					for i in range(ficha1.x-2,ficha1.x+2):
+						for j in range(ficha1.y-2,ficha1.y+2):
 							if(i>self.maxx or j> self.maxy or i<0 or j<0):
 								continue
-							#print('x: ',i,'y: ',j,'pos: ',self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x))	
-							if (ficha1.incompatibles(self.lposiciones[self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x)][0])):
-								r1.lincompat.append(self.lposiciones[self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x)][0])
-							if (len(self.lposiciones[self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x)])>1):
-								if (ficha1.incompatibles(self.lposiciones[self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x)][1])):
-									r1.lincompat.append(self.lposiciones[self.maxx+((self.maxx+1)*ficha1.y)-(self.maxx-ficha1.x)][1])	
+							if (len(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)])>0):
+								if not (ficha1.equals(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][0])):
+									if (ficha1.incompatibles(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][0])):
+										r1.lincompat.append(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][0])
+									# 	print('incomp',self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][0].idfich)
+										
+									# else:
+									# 	print('No incomp',self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][0].idfich)
+							if (len(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)])>1):
+								if not (ficha1.equals(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][1])):
+									if (ficha1.incompatibles(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][1])):
+										r1.lincompat.append(self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][1])
+									# 	print(' incomp',self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][1].idfich)
+							
+									# else:
+									# 	print('No incomp',self.lposiciones[self.maxx+((self.maxx+1)*j)-(self.maxx-i)][1].idfich)
+												
 					self.lreglas.append(r1)
 		def getfichasid(self):
 			s=''
@@ -188,8 +209,9 @@ class regla():
 		
 		for ficha in self.lcancel:
 			if self.creaFicha.valEquals(ficha):
+				#print('ficha 1: ',ficha.x,ficha.y,ficha.direc)
 				s=s+' '+str(ficha.idfich)+' '
-	
+		
 		contreglas+=1
 		s=s+' 0\n'
 
@@ -197,7 +219,10 @@ class regla():
 			#for j in range(i+1,len(self.lcancel)):
 				s=s+' -'+str(self.creaFicha.idfich)+' -'+str(self.lcancel[i].idfich)+' 0\n'
 				contreglas+=1
-		
+		for i in range(0,len(self.lincompat)):
+			#for j in range(i+1,len(self.lcancel)):
+				s=s+' -'+str(self.creaFicha.idfich)+' -'+str(self.lincompat[i].idfich)+' 0\n'
+				contreglas+=1
 		return s
 #clase tabla
 class tabla:
@@ -277,22 +302,25 @@ class tabla:
 		#primera linea
 		#declracion de variables (aka fichas)
 		# print('escribiendo hash')
-		# sf='c'
-		# for fich in self.lfichas:
-		# 	sf=sf+' '+'['+str(fich.idfich)+']-'+fich.hash() 
-		# salida.storetail (sf+' 0\n')
+		sf='c'
+		for pos in self.listanueva.lposiciones:
+			for fich in pos:
+				sf=sf+' '+'['+str(fich.idfich)+']-'+fich.hash() 
+		salida.storetail (sf+' 0\n')
 		print('escribiendo id')
 		# sfid=''
 		# for fich in self.lfichas:
 		# 	sfid=sfid+' '+str(fich.idfich) 
+		print('geing ids')
 		salida.storetail(self.listanueva.getfichasid()+' 0\n')
+		
 		contreglas+=1
 		sr=''
 		contporcentaje=0
 		print('calculando reglas')
 		for rgl in self.lreglas:
 			sr=sr+'\n'+rgl.toString()+''
-			print(int(contporcentaje/len(self.lreglas))*100,'%\r', end='')
+			print(float(contporcentaje/len(self.lreglas))*100,'% ',contporcentaje,len(self.lreglas),' \r', end='')
 			contporcentaje+=1
 		salida.storetail (sr)
 		#declaracion de reglas
@@ -303,6 +331,7 @@ class tabla:
 			for ficha in pos:
 				if ficha.idfich==id:
 					return ficha
+		print("ERRORRR--------------------------------")
 
 	def readSol(self):
 		f=open('resultado.txt','r')
@@ -315,6 +344,7 @@ class tabla:
 					if (not (lineaspl[i].startswith('-'))) and (not (int(lineaspl[i])==0)):
 						#print ('>',lineaspl[i])
 						self.sol.append(self.findFichaId(int(lineaspl[i])))#buscar id en la lista y append a soluciones		
+		f.close()
 	def showSol(self):
 		solx=salida('solx.txt')
 		print('SOLUCION :')
@@ -323,7 +353,7 @@ class tabla:
 		for i in range(0,(self.maxx+1)*(self.maxy+1)):
 			listatabla.append('0')
 		for ficha in self.sol:
-			print('>',ficha.idfich,len(self.sol))
+			print('>',ficha.idfich,ficha.x,ficha.y)
 			if(ficha.direc=='HORIZONTAL'):
 				listatabla[self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x)]='>'
 				listatabla[(self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x))+1]='<'
@@ -337,6 +367,7 @@ class tabla:
 			solx.storetail(listatabla[i])
 		solx.storetail('\n')
 		solx.privado()
+		solx.close()
 def main():
 	#Leer fichero
 	t=tabla(sys.argv[1])
@@ -348,6 +379,7 @@ def main():
 	#t.showReglas()
 	t.toClasp(s)
 	s.privado()
+	s.close()
 		#lista de fichas
 		#buscar fichas con cada valor y anadirlas
 		#hash de la ficha (val1 val2 x y (h|v))
