@@ -64,7 +64,7 @@ class tabla:
 def main():
 	#Leer fichero
 	t=tabla(sys.argv[1])
-	s=salida('clingo.txt')
+	s=salida('initial_state.txt')
 	t.generateTiles()
 	t.toClingo(s)
 # 	s.storehead('% Type declarations\n\
@@ -116,7 +116,7 @@ def main():
 # ')
 	s.privado()
 	s.close()
-	os.system('clingo dominosa2.txt clingo.txt -c n=' + str(t.maxx))
+	os.system('clingo dominosa_rules.txt initial_state.txt -c n=' + str(t.maxx))
 	
 if __name__ == "__main__":
     # execute only if run as a script
