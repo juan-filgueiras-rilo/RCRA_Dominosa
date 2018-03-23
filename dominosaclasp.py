@@ -7,8 +7,8 @@ class salida():
 	def __init__(self,ficherosalida):
 		self.fsalida=open(ficherosalida,'w')
 		self.strstored=''
-	def publica (self,cosas):
-		print(cosas)
+	def publica (self):
+		print(self.strstored)
 	def storetail(self,cosas):
 		self.strstored=self.strstored+cosas
 	def storehead(self,cosas):
@@ -353,7 +353,7 @@ class tabla:
 		for i in range(0,(self.maxx+1)*(self.maxy+1)):
 			listatabla.append('0')
 		for ficha in self.sol:
-			print('>',ficha.idfich,ficha.x,ficha.y)
+			#print('>',ficha.idfich,ficha.x,ficha.y)
 			if(ficha.direc=='HORIZONTAL'):
 				listatabla[self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x)]='>'
 				listatabla[(self.maxx+((self.maxx+1)*ficha.y)-(self.maxx-ficha.x))+1]='<'
@@ -366,6 +366,7 @@ class tabla:
 				solx.storetail('\n')
 			solx.storetail(listatabla[i])
 		solx.storetail('\n')
+		solx.publica()
 		solx.privado()
 		solx.close()
 def main():
