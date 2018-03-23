@@ -15,14 +15,16 @@ class salida():
 	def __init__(self,ficherosalida):
 		self.fsalida=open(ficherosalida,'w')
 		self.strstored=''
-	def publica (self,cosas):
-		print(cosas)
+	def publica (self):
+		print(self.strstored)
 	def storetail(self,cosas):
 		self.strstored=self.strstored+cosas
 	def storehead(self,cosas):
 		self.strstored=cosas+self.strstored
 	def privado(self):
 		self.fsalida.write(self.strstored)
+	def close(self):
+		self.fsalida.close()
 #clase tabla
 class tabla:
 	def __init__(self,fichero):
@@ -113,6 +115,7 @@ def main():
 # \
 # ')
 	s.privado()
+	s.close()
 	os.system('clingo dominosa2.txt clingo.txt -c n=' + str(t.maxx))
 	
 if __name__ == "__main__":
