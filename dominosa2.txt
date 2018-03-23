@@ -30,9 +30,6 @@ n*(n+1)/2 { domino(R1,C1,V1,V2,O) : tile(R1,C1,V1), tile(R2,C2,V2),  orientation
 %	Diferentes posiciones.
 :- domino(R1,C1,V1,V2,O1), domino(R2,C2,V2,V1,O2), V2!=V1.
 
-%:- domino(R1,C1,V,V,O1), domino(R2,C2,V,V,O2), R1!=R2.
-%:- domino(R1,C1,V,V,O1), domino(R2,C2,V,V,O2), C1!=C2.
-
 %	Misma casilla no puede formar sus dos fichas posibles a la vez.
 :- domino(R,C,_,_,O1), domino(R,C,_,_,O2), O1!=O2.
 
@@ -42,3 +39,9 @@ n*(n+1)/2 { domino(R1,C1,V1,V2,O) : tile(R1,C1,V1), tile(R2,C2,V2),  orientation
 :- domino(R1,C1,_,_,O1), domino(R2,C2,_,_,O2), R1+1=R2, C1=C2, O1=v. %, O2=h.
 
 :- domino(R1,C1,_,_,O1), domino(R2,C2,_,_,O2), R1=R2+1, C1+1=C2, O1=h, O2=v.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%n*(n+1)/2 { domino(R1,C1,V1,V2,O) : tile(R1,C1,V1),  orientation(O,R1,C1) } n*(n+1)/2.
+
+%orientation(O,R1,C1) :- O=h, tile(R1,C1,_), tile(R1,C1+1).
+%orientation(O,R1,C1) :- O=v, tile(R1,C1,_), tile(R1+1,C1). 
